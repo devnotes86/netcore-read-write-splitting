@@ -1,0 +1,29 @@
+﻿@model HeavyMetalBandsReadWriteSplittingExample.Models.BandCreateRequest
+
+@{
+    ViewData["Title"] = "Create Band";
+}
+
+<h2>Create Band</h2>
+
+<form asp-action="Create" method="post" class="mt-4">
+    <div class="form-group mb-3">
+        <label asp-for="BandName" class="form-label"></label>
+        <input asp-for="BandName" class="form-control" />
+        <span asp-validation-for="BandName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
