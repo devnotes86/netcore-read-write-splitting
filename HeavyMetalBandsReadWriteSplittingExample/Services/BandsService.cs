@@ -1,40 +1,43 @@
-﻿using HeavyMetalBandsReadWriteSplittingExample.Data;
-using HeavyMetalBandsReadWriteSplittingExample.Data.Models;
-using HeavyMetalBandsReadWriteSplittingExample.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using HeavyMetalBandsReadWriteSplittingExample.Models;
+using HeavyMetalBandsReadWriteSplittingExample.Repositories;
 
 namespace HeavyMetalBandsReadWriteSplittingExample.Services
 {
   
     public class BandsService: IBandsService
     {
-        private readonly DbContext_Write _writeDb;
-        private readonly DbContext_Read _readDb;
+        private readonly IBandsRepository _bandsRepository;
 
-        public BandsService(DbContext_Write writeDb, DbContext_Read readDb)
+        public BandsService(IBandsRepository bandRepository)
         {
-            _writeDb = writeDb;
-            _readDb = readDb;
+            _bandsRepository = bandRepository;
         }
 
-        public async Task<List<Band>> GetBandsAsync()
+        public async Task<IEnumerable<BandDTO>> GetAllAsync()
         {
-            return await _readDb.Bands.ToListAsync();
+            var bands = await _bandsRepository.GetAllAsync();
+            var bandDTOs = bands.Select(band => new BandDTO { Id = band.id, BandName = band.band_name, YearCreated = band.year_created });
+            return bandDTOs.ToList();
         }
 
-        public async Task<int> AddBandAsync(BandCreateRequest band)
+        public async Task<BandDTO> GetByIdAsync(int id)
         {
-            var bandToAdd = new Band
-            {
-                band_name = band.BandName,
-                year_created = band.Year
-            };
-
-
-            _writeDb.Bands.Add(bandToAdd);
-            await _writeDb.SaveChangesAsync();
-
-            return bandToAdd.id;
+            var band = await _bandsRepository.GetByIdAsync(id);
+            return new BandDTO { Id = band.id, BandName = band.band_name, YearCreated = band.year_created };
         }
+
+        public async Task AddAsync(BandDTO dto)
+        {
+            var dao = new BandDAO { band_name = dto.BandName, year_created = dto.YearCreated };
+            await _bandsRepository.AddAsync(dao);
+        }
+
+        public async Task UpdateAsync(BandDTO dto)
+        {
+            var dao = new BandDAO { id = dto.Id, band_name = dto.BandName, year_created = dto.YearCreated };
+            await _bandsRepository.UpdateAsync(dao);
+        }
+
+        public async Task DeleteAsync(int id) => await _bandsRepository.DeleteAsync(id);
     }
 }

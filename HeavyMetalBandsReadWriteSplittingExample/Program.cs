@@ -2,11 +2,12 @@ using HeavyMetalBandsReadWriteSplittingExample.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using HeavyMetalBandsReadWriteSplittingExample.Services;
+using HeavyMetalBandsReadWriteSplittingExample.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 
 builder.Services.AddDbContext<DbContext_Write>(options =>
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<DbContext_Read>(options =>
 
 
 builder.Services.AddTransient<IBandsService, BandsService>();
+builder.Services.AddTransient<IBandsRepository, BandsRepository>();
 
 var app = builder.Build();
 

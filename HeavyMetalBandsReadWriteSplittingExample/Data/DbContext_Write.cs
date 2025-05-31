@@ -1,11 +1,10 @@
-﻿using HeavyMetalBandsReadWriteSplittingExample.Data.Models;
+﻿using HeavyMetalBandsReadWriteSplittingExample.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HeavyMetalBandsReadWriteSplittingExample.Data
 {
-    public class DbContext_Write : DbContext
+    public class DbContext_Write : ApplicationDbContext
     {
-        public DbContext_Write(DbContextOptions<DbContext_Write> options) : base(options) { }
-        public DbSet<Band> Bands { get; set; }
+        public DbContext_Write(DbContextOptions<DbContext_Write> options) : base(options) { } 
     }
 }

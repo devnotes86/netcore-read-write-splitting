@@ -1,12 +1,14 @@
-﻿using HeavyMetalBandsReadWriteSplittingExample.Data.Models;
-using HeavyMetalBandsReadWriteSplittingExample.Models;
+﻿using HeavyMetalBandsReadWriteSplittingExample.Models;
 
 namespace HeavyMetalBandsReadWriteSplittingExample.Services
 {
     public interface IBandsService
     {
-        Task<List<Band>> GetBandsAsync();
-        Task<int> AddBandAsync(BandCreateRequest band);
+        Task<IEnumerable<BandDTO>> GetAllAsync();
+        Task<BandDTO> GetByIdAsync(int id);
+        Task AddAsync(BandDTO band);
+        Task UpdateAsync(BandDTO band);
+        Task DeleteAsync(int id);
 
     }
 }

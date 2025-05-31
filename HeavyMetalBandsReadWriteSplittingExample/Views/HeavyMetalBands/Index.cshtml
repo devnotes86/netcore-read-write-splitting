@@ -1,4 +1,4 @@
-﻿@model List<HeavyMetalBandsReadWriteSplittingExample.Data.Models.Band>
+﻿@model List<BandDTO>
 
 @{
     ViewData["Title"] = "Bands List";
@@ -11,16 +11,22 @@
         <tr>
             <th>Id</th>
             <th>Band Name</th>
-            <th>Created (Year)</th>
+            <th class="text-end">Created (Year)</th>
+            <th class ="text-end"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var band in Model)
         {
             <tr>
-                <td>@band.id</td>
-                <td>@band.band_name</td>
-                <td>@band.year_created</td>
+                <td>@band.Id</td>
+                <td>@band.BandName</td>
+                <td class="text-end">@band.YearCreated</td>
+                <td class="text-end">
+                    <form asp-action="Delete" asp-route-id="@band.Id" method="post" onsubmit="return confirm('Do you really want to delete @band.BandName?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

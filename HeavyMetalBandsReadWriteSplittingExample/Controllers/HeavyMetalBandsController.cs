@@ -13,12 +13,18 @@ namespace HeavyMetalBandsReadWriteSplittingExample.Controllers
             _bandsService = bandsService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() 
         {
-            var bands = await _bandsService.GetBandsAsync();
-            return View(bands); 
+            var bands = await _bandsService.GetAllAsync();
+            return View(bands);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var band = await _bandsService.GetByIdAsync(id);
+            if (band == null) return NotFound();
+            return View(band);
+        }
 
 
         [HttpGet]
@@ -28,13 +34,22 @@ namespace HeavyMetalBandsReadWriteSplittingExample.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(BandCreateRequest b)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(BandDTO band)
         {
             if (!ModelState.IsValid)
-                return View(b);
+                return View(band);
 
-            var id = await _bandsService.AddBandAsync(b);
-            return RedirectToAction("Index");
+            await _bandsService.AddAsync(band); // WriteDbContext used inside service
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _bandsService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

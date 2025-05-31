@@ -1,4 +1,4 @@
-namespace HeavyMetalBandsReadWriteSplittingExample.Models
+namespace HeavyMetalBandsReadWriteSplittingExample.ViewModels
 {
     public class ErrorViewModel
     {
