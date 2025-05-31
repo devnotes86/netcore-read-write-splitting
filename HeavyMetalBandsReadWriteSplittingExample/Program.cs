@@ -9,14 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-
+// mapping DbContexts
 builder.Services.AddDbContext<DbContext_Write>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("WriteDb")));
 
 builder.Services.AddDbContext<DbContext_Read>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ReadDb")));
 
-
+// defining Dependency Injection for Service and repository
 builder.Services.AddTransient<IBandsService, BandsService>();
 builder.Services.AddTransient<IBandsRepository, BandsRepository>();
 

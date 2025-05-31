@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HeavyMetalBandsReadWriteSplittingExample.Controllers
 {
+    [Route("HeavyMetalBands")]
     public class HeavyMetalBandsController : Controller
     {
         private readonly IBandsService _bandsService;
@@ -13,41 +14,39 @@ namespace HeavyMetalBandsReadWriteSplittingExample.Controllers
             _bandsService = bandsService;
         }
 
+        [HttpGet("")]
         public async Task<IActionResult> Index() 
         {
+            // using ReadDbContext
             var bands = await _bandsService.GetAllAsync();
             return View(bands);
         }
 
-        public async Task<IActionResult> Details(int id)
-        {
-            var band = await _bandsService.GetByIdAsync(id);
-            if (band == null) return NotFound();
-            return View(band);
-        }
 
-
-        [HttpGet]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BandDTO band)
         {
             if (!ModelState.IsValid)
                 return View(band);
 
-            await _bandsService.AddAsync(band); // WriteDbContext used inside service
+            // using WriteDbContext
+            await _bandsService.AddAsync(band);
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("Delete/{id:int}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+
+            // using WriteDbContext
             await _bandsService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
